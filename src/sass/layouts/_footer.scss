@@ -1,0 +1,85 @@
+/* Footer Styles*/
+
+.footer {
+  @include section(60px);
+  background-color: var(--footer-background-color);
+}
+
+.footer__container {
+  flex-wrap: wrap;
+  gap: 60px;
+
+  @include mq(tab) {
+    justify-content: space-around;
+    align-items: baseline;
+  }
+
+  @include mq(desk) {
+    justify-content: space-between;
+  }
+}
+
+.footer__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+
+  @include mq(desk) {
+    align-items: flex-start;
+  }
+}
+
+.footer__title {
+  font-size: 14px;
+  line-height: 1.14;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--main-light-color);
+}
+
+.footer__social-link {
+  color: var(--main-light-color);
+  background-color: var(--footer-background-social);
+
+  &:hover,
+  &:focus {
+    background-color: var(--btn-background-color);
+  }
+}
+
+.footer__form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  @include mq(desk) {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+}
+
+.footer__form-input {
+  padding: 14px 15px;
+
+  font-size: 16px;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+
+  color: var(--subscribe-form-input-color);
+
+  border-color: var(--subscribe-form-input-border-color);
+  // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
+
+  @include mq(desk) {
+    min-width: 358px;
+  }
+
+  &::placeholder {
+    color: var(--subscribe-form-input-color);
+  }
+}

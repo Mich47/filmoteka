@@ -1,0 +1,35 @@
+/* Team Card Styles */
+
+%team-card-font-styles {
+  font-size: 16px;
+  line-height: 1.19;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.team-card {
+  height: 100%;
+
+  background-color: var(--main-light-color);
+
+  box-shadow: var(--team-box-shadow);
+  border-radius: var(--team-border-radius);
+
+  &__wrapper {
+    margin: 30px auto;
+  }
+
+  &__member {
+    @extend %team-card-font-styles;
+    font-weight: 500;
+  }
+
+  &__desc {
+    @extend %team-card-font-styles;
+    color: var(--second-font-color);
+  }
+
+  &__social-list {
+    margin-top: 16px;
+  }
+}

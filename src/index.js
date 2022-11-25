@@ -1,10 +1,10 @@
 import * as throttle from 'lodash.throttle';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import './css/styles.css';
+// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import './sass/main.scss';
 import svg from './img/icons.svg';
-const axios = require('axios').default;
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+// const axios = require('axios').default;
+// import SimpleLightbox from 'simplelightbox';
+// import 'simplelightbox/dist/simple-lightbox.min.css';
 
 class Gallery {
   THROTTLE_DELAY = 200;
@@ -250,4 +250,4 @@ const refs = {
 const APIKey = '31303071-b4e5345642141d1af1d763c20';
 const URI = `https://pixabay.com/api/?key=${APIKey}`;
 
-new Gallery(refs, URI).init();
+// new Gallery(refs, URI).init();

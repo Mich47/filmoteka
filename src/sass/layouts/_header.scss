@@ -1,0 +1,64 @@
+/* Header Styles */
+
+.header {
+  @include section(null);
+
+  padding-top: 0;
+  padding-bottom: 0;
+  padding: 40px 20px 44px;
+  /* border-bottom: 1px solid var(--header-border-color); */
+  background-image: url('../img/header/background/mob/background.jpg');
+  background-position: center;
+  background-size: cover;
+}
+
+.header__container {
+  @include mq(mob-only) {
+    padding: 16px 15px;
+    justify-content: space-between;
+  }
+}
+
+.header__wrapper {
+  display: none;
+
+  @include mq(tab) {
+    width: 100%;
+    margin-left: 93px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @include mq(desk) {
+  }
+}
+
+.header__contact-link {
+  font-weight: 500;
+  @include mq(tab-only) {
+    font-size: 12px;
+    line-height: 1.17;
+  }
+
+  @include mq(desk) {
+    padding: 26px 0;
+  }
+}
+
+.header__burger-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  transition: color var(--animation);
+
+  @include mq(tab) {
+    display: none;
+  }
+
+  &:hover,
+  &:focus {
+    color: var(--main-accent-color);
+  }
+}

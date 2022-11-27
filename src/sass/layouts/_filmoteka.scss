@@ -1,0 +1,46 @@
+/* Hero Section Styles */
+
+.filmoteka {
+  @include section();
+  margin: 0 auto;
+  min-width: 320px;
+  max-width: 480px;
+  background-color: var(--main-light-color);
+
+  @media screen and (min-width: 768px) {
+    @include section(60px, 60px);
+    max-width: 768px;
+  }
+
+  @media screen and (min-width: 1280px) {
+    @include section(60px, 60px);
+    max-width: 1280px;
+  }
+}
+
+// .filmoteka__wrapper {
+//   max-width: 360px;
+//   margin: 0 auto;
+//   text-align: center;
+
+//   @media screen and (min-width: 1280px) {
+//     max-width: 696px;
+//   }
+// }
+
+// .filmoteka__title {
+//   margin-bottom: 30px;
+
+//   font-size: 26px;
+//   line-height: 1.62;
+//   font-weight: 900;
+//   letter-spacing: 0.06em;
+
+//   text-align: center;
+//   text-transform: uppercase;
+
+//   @media screen and (min-width: 1200px) {
+//     font-size: 44px;
+//     line-height: 1.36;
+//   }
+// }

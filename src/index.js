@@ -1,3 +1,6 @@
+import './js/navigation-toggle';
+import './js/mylib-btn-toggle';
+
 import * as throttle from 'lodash.throttle';
 // import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import './sass/main.scss';

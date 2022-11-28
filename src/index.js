@@ -2,26 +2,24 @@ import './js/navigation-toggle';
 import './js/mylib-btn-toggle';
 
 import * as throttle from 'lodash.throttle';
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import './sass/main.scss';
-import svg from './img/icons.svg';
-// const axios = require('axios').default;
-// import SimpleLightbox from 'simplelightbox';
-// import 'simplelightbox/dist/simple-lightbox.min.css';
+// import svg from './img/icons.svg';
+const axios = require('axios').default;
 
-class Gallery {
+class Filmoteka {
   THROTTLE_DELAY = 200;
   PER_PAGE_COUNT = 40;
   ORIENTATION = '&orientation=horizontal';
   SAFE_SEARCH = '&safesearch=true';
   IMAGE_TYPE = '&image_type=photo';
+  GENRES = [0];
 
-  constructor({ searchForm, gallery }, URI) {
+  constructor({ searchForm, filmotekaList }, URI) {
     this.searchForm = searchForm;
-    this.gallery = gallery;
+    this.filmotekaList = filmotekaList;
     this.URI = URI;
     this.QUERY - null;
-    this.gallerySimple = null;
     this.totalHits = 1;
     this.page = 1;
     this.clickHandler = null;
@@ -35,8 +33,12 @@ class Gallery {
     this.shouldLoad = true;
   }
 
-  init() {
-    this.addListeners();
+  async init() {
+    // Promise.all([this.getGenres(), this.getMovies()]);
+    await this.getGenres();
+
+    await this.getMovies();
+    // this.addListeners();
   }
 
   addListeners() {
@@ -68,67 +70,105 @@ class Gallery {
 
     this.shouldLoad = true;
 
-    await this.clearGallery();
+    await this.clearFilmoteka();
     await this.setStartValue(event);
-    await this.getImages();
+    await this.getMovies();
     await this.addScrollListeners();
-
-    this.createSimpleLightbox();
-    this.refreshSimpleLightbox();
   }
 
-  async getImages() {
+  async getMovies() {
     if (this.isLoading || !this.shouldLoad) return;
 
     this.isLoading = true;
 
     try {
-      const imagesArr = await this.fetchImages();
+      const moviesArr = await this.fetchMovies();
+      console.log('moviesArr ', moviesArr);
 
       this.isLoading = false;
 
-      if (imagesArr.length === 0) {
+      if (moviesArr.length === 0) {
         throw new Error(
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
 
-      this.page += 1;
-      this.markupGallery(imagesArr);
+      // this.page += 1;
+      this.markupFilmoteka(moviesArr);
 
-      this.refreshSimpleLightbox();
-
-      this.checkMaxPageLoad();
+      // this.checkMaxPageLoad();
     } catch (error) {
       Notify.failure(error.message);
     }
   }
 
-  async fetchImages() {
+  async fetchMovies() {
     const PER_PAGE = `&per_page=${this.PER_PAGE_COUNT}`;
     const PAGE = `&page=${this.page}`;
-    const URI =
-      this.URI +
-      this.ORIENTATION +
-      this.SAFE_SEARCH +
-      this.IMAGE_TYPE +
-      this.QUERY +
-      PER_PAGE +
-      PAGE;
+    const URI = this.URI;
+    // this.ORIENTATION +
+    // this.SAFE_SEARCH +
+    // this.IMAGE_TYPE +
+    // this.QUERY +
+    // PER_PAGE +
+    // PAGE;
 
     try {
       const response = await axios.get(URI);
+      console.log('response ', response);
 
-      this.totalHits = Math.ceil(response.data.totalHits / this.PER_PAGE_COUNT);
+      // this.totalHits = Math.ceil(response.data.totalHits / this.PER_PAGE_COUNT);
 
-      if (this.page === 1 && this.totalHits) {
-        Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
-      }
+      // if (this.page === 1 && this.totalHits) {
+      //   Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+      // }
 
-      return response.data.hits;
+      return response.data.results;
     } catch (error) {
       console.error(error);
     }
+  }
+
+  markupGenres(genre_ids) {
+    let genres = [];
+
+    for (let i = 0; i < genre_ids.length; i++) {
+      for (let j = 0; j < this.GENRES.length; j++) {
+        const genre = this.GENRES[j];
+        if (genre.id === genre_ids[i]) {
+          genres.push(genre.name);
+          continue;
+        }
+      }
+    }
+
+    return genres.join(', ');
+  }
+
+  async getGenres() {
+    try {
+      this.GENRES = await this.fetchGenres();
+    } catch (error) {
+      Notify.failure(error.message);
+    }
+  }
+
+  async fetchGenres() {
+    const URI = `https://api.themoviedb.org/3/genre/movie/list?api_key=e0e51fe83e5367383559a53110fae0e8`;
+
+    const response = await axios.get(URI);
+    console.log('response ', response.data.genres);
+
+    return response.data.genres;
+
+    // try {
+    //   const response = await axios.get(URl);
+    //   console.log('response ', response.data.genres);
+
+    //   return response.data.genres;
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 
   checkMaxPageLoad() {
@@ -153,22 +193,6 @@ class Gallery {
     this.page = 1;
   }
 
-  createSimpleLightbox() {
-    if (!this.gallerySimple) {
-      this.gallerySimple = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-        scrollZoom: false,
-      });
-    }
-  }
-
-  refreshSimpleLightbox() {
-    if (this.gallerySimple) {
-      this.gallerySimple.refresh();
-    }
-  }
-
   checkScrollPosition() {
     const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
     // console.log(scrollHeight); // Висота всього документа в пікселях
@@ -187,70 +211,48 @@ class Gallery {
     }
   }
 
-  clearGallery() {
-    this.gallery.innerHTML = '';
+  clearFilmoteka() {
+    this.filmotekaList.innerHTML = '';
   }
 
-  markupGallery(dataArr) {
-    this.gallery.insertAdjacentHTML(
+  markupFilmoteka(dataArr) {
+    this.filmotekaList.insertAdjacentHTML(
       'beforeend',
-      dataArr.map(this.markupFotoCard.bind(this)).join('')
+      dataArr.map(this.markupCard.bind(this)).join('')
     );
   }
 
-  markupFotoCard(imgObj) {
-    return `<div class="gallery__item">
-      <div class="gallery__thumb">
-        <a class="gallery__link" href="${imgObj.largeImageURL}">
-          <img
-            class="gallery__image"
-            src="${imgObj.webformatURL}"
-            alt="${imgObj.tags}"
-          />
-        </a>
-        <div class="gallery__image-overlay">
-          ${this.markupInfoList(imgObj)}
-        </div>
-      </div>
-    </div>`;
-  }
+  markupCard(imgObj) {
+    const base_url = 'https://image.tmdb.org/t/p/';
+    // const file_size = 'original';
+    const file_size = 'w500';
+    const URI = `${base_url}${file_size}${imgObj.poster_path}`;
+    const date = new Date(imgObj.release_date);
 
-  markupInfoList({ likes, views, comments, downloads }) {
-    return `<ul class="list info-list">
-      <li class="info-item" title="Likes">
-        <svg class="icon" width="16" height="16">
-          <use href="${svg}#icon-like"></use>
-        </svg>
-        <p class="info-desc">${likes}</p>
-      </li>
-      <li class="info-item" title="Views">
-        <svg class="icon" width="16" height="16">
-          <use href="${svg}#icon-view"></use>
-        </svg>
-        <p class="info-desc">${views}</p>
-      </li>
-      <li class="info-item" title="Comments">
-        <svg class="icon" width="16" height="16">
-          <use href="${svg}#icon-comment"></use>
-        </svg>
-        <p class="info-desc">${comments}</p>
-      </li>
-      <li class="info-item" title="Downloads">
-        <svg class="icon" width="16" height="16">
-          <use href="${svg}#icon-download"></use>
-        </svg>
-        <p class="info-desc">${downloads}</p>
-      </li>
-    </ul>`;
+    const genres = this.markupGenres(imgObj.genre_ids);
+
+    return `<li class="grid__item filmoteka__item">
+				<div class="filmoteka__thumb">
+					<div class="card">
+						<img class="card__img" src="${URI}" alt="">
+						<div class="card__wrapper">
+							<h3 class="card__title title">${imgObj.original_title}</h3>
+							<p class="card__desc">${genres} | ${date.getFullYear()}
+							</p>
+						</div>
+					</div>
+				</div>
+			</li>
+    `;
   }
 }
 
 const refs = {
   searchForm: document.querySelector('#search-form'),
-  gallery: document.querySelector('.gallery'),
+  filmotekaList: document.querySelector('.filmoteka__list'),
 };
 
-const APIKey = '31303071-b4e5345642141d1af1d763c20';
-const URI = `https://pixabay.com/api/?key=${APIKey}`;
+const APIKey = 'e0e51fe83e5367383559a53110fae0e8';
+const URI = `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKey}`;
 
-// new Gallery(refs, URI).init();
+new Filmoteka(refs, URI).init();

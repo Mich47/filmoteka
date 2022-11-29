@@ -29,9 +29,9 @@
     color: var(--second-font-color);
   }
 
-  &--current {
+  // &--current {
     //color: var(--main-accent-color);
-  }
+  // }
 
   &--current::after {
     position: absolute;

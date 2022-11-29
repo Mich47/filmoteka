@@ -1,6 +1,7 @@
 //Section Padding Top and Bottom
 
 $default-sec-pad: 20px;
+$default-sec-pad: 20px;
 @mixin section($p-top: $default-sec-pad, $p-bot: $p-top) {
   @if $p-top == default {
     padding-top: $default-sec-pad;

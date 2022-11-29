@@ -9,7 +9,7 @@
 // Base
 @import './base/base';
 @import './base/reset';
-@import './base/typography';
+// @import './base/typography';
 @import './base/grid';
 
 // Components
@@ -19,11 +19,11 @@
 @import './components/navigation';
 @import './components/form';
 @import './components/logo';
-@import './components/modal';
+@import './components/pagination';
+// @import './components/modal';
 
 @import './components/search-form';
 @import './components/card';
-@import './components/mobile-menu';
 
 // Layouts
 @import './layouts/header';

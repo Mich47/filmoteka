@@ -15,10 +15,10 @@ class Filmoteka {
   IMAGE_TYPE = '&image_type=photo';
   GENRES = [0];
 
-  constructor({ searchForm, filmotekaList }, URI) {
+  constructor({ searchForm, filmotekaList }, APIKey) {
     this.searchForm = searchForm;
     this.filmotekaList = filmotekaList;
-    this.URI = URI;
+    this.APIKey = APIKey;
     this.QUERY - null;
     this.totalHits = 1;
     this.page = 1;
@@ -36,14 +36,15 @@ class Filmoteka {
   async init() {
     // Promise.all([this.getGenres(), this.getMovies()]);
     await this.getGenres();
+    const URI = `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKey}`;
 
-    await this.getMovies();
-    // this.addListeners();
+    await this.getMovies(URI);
+    this.addListeners();
   }
 
   addListeners() {
     this.searchForm.addEventListener('submit', this.onSearchForm.bind(this));
-    this.gallery.addEventListener('click', this.onGalleryImageClick.bind(this));
+    // this.gallery.addEventListener('click', this.onGalleryImageClick.bind(this));
   }
 
   addScrollListeners() {
@@ -65,24 +66,25 @@ class Filmoteka {
 
   async onSearchForm(event) {
     event.preventDefault();
-    this.QUERY = `&q=${event.target.elements.searchQuery.value}`;
-    this.removeScrollListeners();
+    // this.QUERY = `&q=${event.target.elements.searchQuery.value}`;
+    const URI = `https://api.themoviedb.org/3/search/movie?api_key=${this.APIKey}&query=${event.target.elements.searchQuery.value}`;
+    // this.removeScrollListeners();
 
     this.shouldLoad = true;
 
     await this.clearFilmoteka();
-    await this.setStartValue(event);
-    await this.getMovies();
-    await this.addScrollListeners();
+    // await this.setStartValue(event);
+    await this.getMovies(URI);
+    // await this.addScrollListeners();
   }
 
-  async getMovies() {
+  async getMovies(URI) {
     if (this.isLoading || !this.shouldLoad) return;
 
     this.isLoading = true;
 
     try {
-      const moviesArr = await this.fetchMovies();
+      const moviesArr = await this.fetchMovies(URI);
       console.log('moviesArr ', moviesArr);
 
       this.isLoading = false;
@@ -102,10 +104,10 @@ class Filmoteka {
     }
   }
 
-  async fetchMovies() {
+  async fetchMovies(URI) {
     const PER_PAGE = `&per_page=${this.PER_PAGE_COUNT}`;
     const PAGE = `&page=${this.page}`;
-    const URI = this.URI;
+    // const URI = this.URI;
     // this.ORIENTATION +
     // this.SAFE_SEARCH +
     // this.IMAGE_TYPE +
@@ -154,7 +156,7 @@ class Filmoteka {
   }
 
   async fetchGenres() {
-    const URI = `https://api.themoviedb.org/3/genre/movie/list?api_key=e0e51fe83e5367383559a53110fae0e8`;
+    const URI = `https://api.themoviedb.org/3/genre/movie/list?api_key=${this.APIKey}`;
 
     const response = await axios.get(URI);
     console.log('response ', response.data.genres);
@@ -253,6 +255,5 @@ const refs = {
 };
 
 const APIKey = 'e0e51fe83e5367383559a53110fae0e8';
-const URI = `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKey}`;
 
-new Filmoteka(refs, URI).init();
+new Filmoteka(refs, APIKey).init();

@@ -18,9 +18,11 @@
 
 		<form class="search" id="search-form">
 			<input class="search__input" type="text" name="searchQuery" autocomplete="off" autofocus
-				placeholder="Movie search" />
-			<button class="search__btn" type="submit">
-				<img class="search__icon" src="./img/search.svg" alt="" aria-hidden="true" title="Search">
+				placeholder="Movie search" required minlength="3" />
+			<button class="search__btn" type="submit" title="Search">
+				<svg class="icon search__icon" width="12" height="12">
+					<use href="./img/icons.svg#icon-search"></use>
+				</svg>
 			</button>
 			<p class="search__info">Search result not successful. Enter the correct movie name and try againe</p>
 		</form>

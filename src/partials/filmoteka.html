@@ -6,7 +6,6 @@
 				<div class="filmoteka__thumb">
 					<div class="card">
 						<img class="card__img" src="./img/test.jpg" alt="">
-
 						<div class="card__wrapper">
 							<h3 class="card__title title">GREYHOUND</h3>
 							<p class="card__desc">Drama, Action | 2020
@@ -14,15 +13,25 @@
 						</div>
 					</div>
 				</div>
-
 			</li> -->
 		</ul>
 		<div class="pagination filmoteka__pagination">
 			<button id="prev-btn" class="button pagination__button" type="button">
-				\</button>
+				<svg class="icon pagination__img" width="16" height="16">
+					<use href="./img/icons.svg#icon-left"></use>
+				</svg>
+			</button>
 			<button id="current-btn" class="button pagination__button" type="button">1</button>
-			<button id="next-btn" class="button pagination__button" type="button">/</button>
+			<button id="current-btn" class="button pagination__button" type="button">2</button>
+			<button id="current-btn" class="button pagination__button" type="button">3</button>
+			<button id="current-btn" class="button pagination__button" type="button">4</button>
+			<button id="current-btn" class="button pagination__button" type="button">5</button>
 
+			<button id="next-btn" class="button pagination__button" type="button">
+				<svg class="icon pagination__img pagination__img--rotate" width="16" height="16">
+					<use href="./img/icons.svg#icon-left"></use>
+				</svg>
+			</button>
 		</div>
 	</div>
 </section>
